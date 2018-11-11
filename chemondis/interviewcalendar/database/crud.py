@@ -68,6 +68,7 @@ class CrudOperations:
             data as dict
         """
         query_filter = (getattr(Data, key) == value for key, value in kwargs.items())
+        print(query_filter)
 
         data = self.db_connection.session.query(Data).filter(and_(query_filter)).all()
 
