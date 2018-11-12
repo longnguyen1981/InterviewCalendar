@@ -89,6 +89,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+calendar/
 
 # Spyder project settings
 .spyderproject

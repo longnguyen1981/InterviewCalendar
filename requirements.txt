@@ -1,0 +1,4 @@
+SQLAlchemy
+flask
+psycopg2
+testing.postgresql

@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgres-server:
+    image: 'postgres:latest'
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=pass
+    ports:
+      - "5432:5432"
+
+  calendar-service:
+    image: 'calendar-service:latest'
+    build: .
+    restart: always
+    depends_on:
+      - postgres-server
+    environment:
+      - DB_HOST=postgres-server
+    ports:
+      - "7000:7000"
