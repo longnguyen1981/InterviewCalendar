@@ -37,7 +37,6 @@ class CrudOperations:
             list of data with schema format
         """
         f = [Data(**item) for item in bulk_data]
-        print(f)
         self.db_connection.session.bulk_save_objects(f)
         self.db_connection.session.commit()
         return bulk_data

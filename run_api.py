@@ -31,10 +31,6 @@ def get_data(name):
         list_out = my_crud.query_with_filter(**query_string)
         return jsonify(data=list_out)
 
-    if request.method == 'POST':
-        input_data = json.loads(request.data.decode('utf-8'))
-        return jsonify(input_data)
-
 
 @app.route('/updatecalendar/<id>', methods=['DELETE', 'PATCH'])
 def update_data(id):
