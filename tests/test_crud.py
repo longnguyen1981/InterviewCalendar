@@ -2,8 +2,8 @@ from unittest import TestCase
 import testing.postgresql
 
 from company.interviewcalendar.database.crud import DatabaseConnection
-from company.interviewcalendar.database.crud  import Data
-from company.interviewcalendar.database.crud  import CrudOperations
+from company.interviewcalendar.database.crud import Data
+from company.interviewcalendar.database.crud import CrudOperations
 
 
 Postgresql = testing.postgresql.PostgresqlFactory(cache_initialized_db=True)
