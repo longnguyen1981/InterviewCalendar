@@ -4,4 +4,6 @@ set -o nounset
 
 order_base_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../
 
-docker-compose -f $order_base_dir/docker-compose.yml up
+docker-compose -f $order_base_dir/docker-compose.yml build
+docker-compose -f $order_base_dir/docker-compose.yml up -d postgres-server
+docker-compose -f $order_base_dir/docker-compose.yml up -d calendar-service

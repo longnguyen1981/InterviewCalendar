@@ -7,15 +7,11 @@ The instructions below help you to start the service on your local machine using
 
 - Prerequisite [Docker installed](https://docs.docker.com/install/)
 
-1. Build the needed images.
-   ```
-   .bin/build-service
-   ```
-2. Start the service
+1. Start the service
    ```
    .bin/start_service
    ```
-3. Stop the service
+2. Stop the service
     ```
     .bin/drop_all
     ```

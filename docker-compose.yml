@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   postgres-server:
@@ -12,6 +12,7 @@ services:
   calendar-service:
     image: 'calendar-service:latest'
     build: .
+    restart: always
     depends_on:
       - postgres-server
     environment:
