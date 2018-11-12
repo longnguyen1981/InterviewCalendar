@@ -7,12 +7,6 @@ from .schema import Data
 class CrudOperations:
     """
     offers basic crud-operations for Data-Table
-
-    Raises:
-        AttributeError: when you attempt to access an attribute that does not exist
-        IntegrityError: when you try to do something that would violate
-                        the constraints configured on a Column or Table
-
     """
 
     def __init__(self, db_connection: DatabaseConnection):
@@ -42,7 +36,9 @@ class CrudOperations:
         Returns:
             list of data with schema format
         """
-        self.db_connection.session.bulk_save_objects(bulk_data)
+        f = [Data(**item) for item in bulk_data]
+        print(f)
+        self.db_connection.session.bulk_save_objects(f)
         self.db_connection.session.commit()
         return bulk_data
 
@@ -68,11 +64,22 @@ class CrudOperations:
             data as dict
         """
         query_filter = (getattr(Data, key) == value for key, value in kwargs.items())
-        print(query_filter)
 
         data = self.db_connection.session.query(Data).filter(and_(query_filter)).all()
 
-        return [item.__dict__ for item in data]
+        return [self.remove_dict_key(item.__dict__, '_sa_instance_state') for item in data]
+
+    def query_by_listname(self, name_list: list):
+        """
+        query data by name
+        Args:
+            name_list: list of name
+        Returns:
+            data as dict
+        """
+        data = self.db_connection.session.query(Data).filter(Data.name.in_(name_list)).all()
+
+        return [self.remove_dict_key(item.__dict__, '_sa_instance_state') for item in data]
 
     def update_data(self, id: int, data: dict):
         """
@@ -100,3 +107,17 @@ class CrudOperations:
         f = self.db_connection.session.query(Data).filter(Data.id == id).delete()
         self.db_connection.session.commit()
         return f
+
+    @staticmethod
+    def remove_dict_key(dict_in: dict, key: str):
+        """
+        remove key in dict if necessary
+        Args:
+             dict_in: dictionary
+             key: item with key should be remove
+        Returns:
+            dict without item with key
+        """
+        new_dict = dict_in.copy()
+        new_dict.pop(key, None)
+        return new_dict
