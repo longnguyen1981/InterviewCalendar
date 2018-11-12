@@ -60,7 +60,7 @@ def update_data(id):
 def map_data():
     if request.method == 'POST':
         input_data = json.loads(request.data.decode('utf-8'))
-        avail = map_calendar(my_crud.query_by_listname(input_data['data']))
+        avail = map_calendar(my_crud.query_by_listname(input_data['names']))
         return jsonify(result=avail)
 
 

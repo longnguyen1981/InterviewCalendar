@@ -14,7 +14,7 @@ class TestCrud(TestCase):
         self.postgresql = Postgresql()
         self.db_connection = DatabaseConnection.init_from_url(self.postgresql.url())
         self.crud = CrudOperations(self.db_connection)
-        self.data = [{'name': 'name1', 'fromhour': 8, 'tohour': 14, 'day': 4}, {'name': 'name2', 'fromhour': 9, 'tohour': 12, 'day': 4}]
+        self.data = [{'name': 'name1', 'fromhour': 8, 'tohour': 14, 'day': 'Wed'}, {'name': 'name2', 'fromhour': 9, 'tohour': 12, 'day': 'Wed'}]
 
     def test_put_data(self):
         putdata = self.crud.put_data(self.data[0])
@@ -24,7 +24,7 @@ class TestCrud(TestCase):
     def test_put_bulk(self):
         out = self.crud.put_bulk(self.data)
         for item in out:
-            self.assertEqual(item['day'], 4)
+            self.assertEqual(item['day'], 'Wed')
 
     def test_get_data(self):
         self.crud.put_data(self.data[0])
@@ -42,18 +42,18 @@ class TestCrud(TestCase):
         query = {'name': 'name1'}
         out = self.crud.query_with_filter(**query)
         for item in out:
-            self.assertEqual(item['day'], 4)
+            self.assertEqual(item['day'], 'Wed')
 
     def test_query_by_listname(self):
         self.crud.put_bulk(self.data)
         out = self.crud.query_by_listname(['name1', 'name2'])
         self.assertEqual(len(out), 2)
         for item in out:
-            self.assertEqual(item['day'], 4)
+            self.assertEqual(item['day'], 'Wed')
 
     def test_update_data(self):
         self.crud.put_bulk(self.data)
-        updatedata = {'name': 'name3', 'fromhour': 8, 'tohour': 14, 'day': 4}
+        updatedata = {'name': 'name3', 'fromhour': 8, 'tohour': 14, 'day': 'Wed'}
         out = self.crud.update_data(id=1, data=updatedata)
         self.assertEqual(out['id'], 1)
         query = self.db_connection.session.query(Data).filter(Data.id == 1).all()
