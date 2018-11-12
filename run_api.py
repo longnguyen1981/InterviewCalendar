@@ -1,12 +1,10 @@
 from flask import Flask, make_response, request, jsonify
 import json
-from chemondis.interviewcalendar.src.mapping import map_calendar, validate_time
-from chemondis.interviewcalendar.database.crud import CrudOperations, DatabaseConnection
+from company.interviewcalendar.src.mapping import map_calendar, validate_time
+from company.interviewcalendar.database.crud import CrudOperations, DatabaseConnection
 from setting import args
 
 app = Flask(__name__)
-
-print(args.username, args.password, args.dbname, args.dbtype, args.host, args.port)
 
 db_connection = DatabaseConnection(args.username, args.password, args.dbname, args.dbtype, args.host, args.port)
 
@@ -21,7 +19,7 @@ def health_check():
     return make_response('OK',200)
 
 
-@app.route('/addcalendar', methods=['POST'])
+@app.route('/add', methods=['POST'])
 def add_data():
     if request.method == 'POST':
         input_data = json.loads(request.data.decode('utf-8'))
@@ -32,7 +30,7 @@ def add_data():
         return make_response(validate['response'], validate['code'])
 
 
-@app.route('/getcalendar/<name>', methods=['GET', 'POST'])
+@app.route('/get/<name>', methods=['GET', 'POST'])
 def get_data(name):
     if request.method == 'GET':
         query_string = {'name': name}
@@ -40,7 +38,7 @@ def get_data(name):
         return jsonify(data=list_data)
 
 
-@app.route('/updatecalendar/<id>', methods=['DELETE', 'PATCH'])
+@app.route('/update/<id>', methods=['DELETE', 'PATCH'])
 def update_data(id):
     if request.method == 'DELETE':
         success = my_crud.delete_data(id)
@@ -58,7 +56,7 @@ def update_data(id):
         return make_response(validate['response'], validate['code'])
 
 
-@app.route('/mapcalendar', methods=['POST'])
+@app.route('/map', methods=['POST'])
 def map_data():
     if request.method == 'POST':
         input_data = json.loads(request.data.decode('utf-8'))

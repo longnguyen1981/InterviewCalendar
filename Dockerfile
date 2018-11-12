@@ -1,13 +1,13 @@
 FROM python:3
 
-MAINTAINER  Long Nguyen <long.nguyen@gmail.com>
+MAINTAINER  Long Nguyen <hoanglong2k@gmail.com>
 
 WORKDIR /usr/src/app
 
 RUN apt-get update
 
 COPY run_api.py requirements.txt setting.py /usr/src/app/
-COPY chemondis              /usr/src/app/chemondis
+COPY company              /usr/src/app/company
 
 RUN pip3 install -r requirements.txt
 EXPOSE 7000

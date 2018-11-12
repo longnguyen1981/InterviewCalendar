@@ -15,6 +15,6 @@ services:
     depends_on:
       - postgres-server
     environment:
-      - DBHOST=postgres-server
+      - DB_HOST=postgres-server
     ports:
       - "7000:7000"

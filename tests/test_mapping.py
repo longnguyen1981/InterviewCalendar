@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from chemondis.interviewcalendar.src.mapping import map_calendar, validate_time
+from company.interviewcalendar.src.mapping import map_calendar, validate_time
 
 
 class TestMapping(TestCase):
