@@ -10,5 +10,5 @@ class Data(Base):
     name = Column(VARCHAR)
     fromhour = Column(Integer)
     tohour = Column(Integer)
-    day = Column(Integer)
+    day = Column(VARCHAR)
 

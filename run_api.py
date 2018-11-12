@@ -1,11 +1,16 @@
 from flask import Flask, make_response, request, jsonify
 import json
-from chemondis.interviewcalendar.src.mapping import map_calendar
+from chemondis.interviewcalendar.src.mapping import map_calendar, validate_time
 from chemondis.interviewcalendar.database.crud import CrudOperations, DatabaseConnection
+from setting import args
 
 app = Flask(__name__)
 
-my_crud = CrudOperations(DatabaseConnection('postgres', 'pass', 'testdb'))
+print(args.username, args.password, args.dbname, args.dbtype, args.host, args.port)
+
+db_connection = DatabaseConnection(args.username, args.password, args.dbname, args.dbtype, args.host, args.port)
+
+my_crud = CrudOperations(db_connection)
 
 
 @app.route('/health')
@@ -20,28 +25,37 @@ def health_check():
 def add_data():
     if request.method == 'POST':
         input_data = json.loads(request.data.decode('utf-8'))
-        list_add = my_crud.put_bulk(input_data['data'])
-        return jsonify(list_add)
+        validate = validate_time(input_data['data'])
+        if validate['code'] == 200:
+            list_add = my_crud.put_bulk(validate['response'])
+            validate['response'] = jsonify(list_add)
+        return make_response(validate['response'], validate['code'])
 
 
 @app.route('/getcalendar/<name>', methods=['GET', 'POST'])
 def get_data(name):
     if request.method == 'GET':
         query_string = {'name': name}
-        list_out = my_crud.query_with_filter(**query_string)
-        return jsonify(data=list_out)
+        list_data = my_crud.query_with_filter(**query_string)
+        return jsonify(data=list_data)
 
 
 @app.route('/updatecalendar/<id>', methods=['DELETE', 'PATCH'])
 def update_data(id):
     if request.method == 'DELETE':
         success = my_crud.delete_data(id)
-        return jsonify(success)
+        if success == 1:
+            return make_response('Successfully deleted', 200)
+        else:
+            return make_response('Could not delete', 403)
 
     if request.method == 'PATCH':
         input_data = json.loads(request.data.decode('utf-8'))
-        update_data = my_crud.update_data(id, input_data['data'])
-        return jsonify(update_data)
+        validate = validate_time(input_data['data'])
+        if validate['code'] == 200:
+            update_data = my_crud.update_data(id, input_data['data'])
+            validate['response'] = jsonify(update_data)
+        return make_response(validate['response'], validate['code'])
 
 
 @app.route('/mapcalendar', methods=['POST'])
@@ -49,7 +63,7 @@ def map_data():
     if request.method == 'POST':
         input_data = json.loads(request.data.decode('utf-8'))
         avail = map_calendar(my_crud.query_by_listname(input_data['data']))
-        return jsonify(data=avail)
+        return jsonify(result=avail)
 
 
 if __name__ == '__main__':

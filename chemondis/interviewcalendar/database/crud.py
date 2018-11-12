@@ -63,9 +63,7 @@ class CrudOperations:
             data as dict
         """
         query_filter = (getattr(Data, key) == value for key, value in kwargs.items())
-
         data = self.db_connection.session.query(Data).filter(and_(query_filter)).all()
-
         return [self.remove_dict_key(item.__dict__, '_sa_instance_state') for item in data]
 
     def query_by_listname(self, name_list: list):
